@@ -1,0 +1,38 @@
+---
+- name: Initialize the ansibleop account on a system
+  hosts: "{{ INVENTORY }}"
+  vars_files:
+    - secrets.yml
+
+  vars:
+    default_op_username: "ansibleop"
+    default_op_password: "{{ secret_default_op_password }}"
+    default_op_uid: 1000
+    default_op_gid: 1000
+
+  vars_prompt:
+    
+    - name: op_account
+      prompt: "Operator account username?"
+      default: "{{ default_op_username }}"
+      private: no
+    
+    - name: op_password
+      prompt: "Operator account password?"
+      private： yes
+      default: "{{ default_op_password }}"
+    
+    - name: op_uid
+      prompt: "Operator uid?"
+      default: "{{ default_op_uid }}"
+      private: no
+
+    - name: op_gid
+      prompt: "Operator gid?"
+      default: "{{ default_op_gid }}"
+
+tasks:
+  - name: Debug
+    msg: Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}
+    
+...
