@@ -11,7 +11,6 @@
     default_op_gid: 1000
 
   vars_prompt:
-    
     - name: op_account
       prompt: "Operator account username?"
       default: "{{ default_op_username }}"
@@ -19,8 +18,8 @@
     
     - name: op_password
       prompt: "Operator account password?"
-      private： yes
       default: "{{ default_op_password }}"
+      private: yes
     
     - name: op_uid
       prompt: "Operator uid?"
