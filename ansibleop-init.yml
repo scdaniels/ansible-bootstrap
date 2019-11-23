@@ -15,7 +15,7 @@
     op_account_ssh_pub_key: "NOTDEFINED"
     op_account_homedir: ""
     gen_ssh_key: false
-    config_primary_op: false  # Are we initializing the operator account on the Tower system?
+    config_primary_op: true  # Are we initializing the operator account on the Tower system?
 
 
   vars_prompt:
@@ -63,7 +63,7 @@
 
         - name: Load the Ansible Operator public key into a fact
           set_fact:
-            op_account_homedir: getent_passwd['{{ op_username }}'].4
+            op_account_homedir: "{{ getent_passwd[op_username].4 }}"
 
         - name: Update authorized_keys file to include the new public key
           lineinfile:
@@ -71,7 +71,7 @@
             owner: "{{ op_username }}"
             group: "{{ op_username }}"
             mode: 0400
-            line: "{{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}"
+            line: "{{ lookup('file', op_account_homedir + '/.ssh/id_rsa.pub') }}"
             create: true
             backup: true
             state: present
@@ -97,6 +97,7 @@
         state: present
     
     - name: Debug
-      msg: "Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}"
+      debug:
+        msg: "Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}"
     
 ...
