@@ -38,66 +38,66 @@
       prompt: "Operator gid?"
       default: "{{ default_op_account.gid }}"
 
-tasks:
-  - name: create the Ansible operator account
-    user:
-      name: "{{ op_username }}"
-      create_home: true
-      uid: "{{ op_uid }}"
-      state: present
+  tasks:
+    - name: create the Ansible operator account
+      user:
+        name: "{{ op_username }}"
+        create_home: true
+        uid: "{{ op_uid }}"
+        state: present
 
-  - name: Create the Ansbile operator account ssh key and cache the public key into a fact for primary account only
-    block:
-      - name: Create the RSA keys for the primary operator account
-        user:
-          name: "{{ op_username }}"
-          generate_ssh_key: true
-          ssh_key_bits: 2048
-          ssh_key_file: .ssh/id_rsa
-          state: present
+    - name: Create the Ansbile operator account ssh key and cache the public key into a fact for primary account only
+      block:
+        - name: Create the RSA keys for the primary operator account
+          user:
+            name: "{{ op_username }}"
+            generate_ssh_key: true
+            ssh_key_bits: 2048
+            ssh_key_file: .ssh/id_rsa
+            state: present
 
-      - name: Lookup newly create Operator account home directory
-        getent:
-          database: passwd
-          key: "{{ op_username }}"
+        - name: Lookup newly create Operator account home directory
+          getent:
+            database: passwd
+            key: "{{ op_username }}"
 
-      - name: Load the Ansible Operator public key into a fact
-        set_fact:
-          op_account_homedir: getent_passwd['{{ op_username }}'].4
+        - name: Load the Ansible Operator public key into a fact
+          set_fact:
+            op_account_homedir: getent_passwd['{{ op_username }}'].4
 
-      - name: Update authorized_keys file to include the new public key
-        lineinfile:
-          path: "{{ op_account_homedir }}/.ssh/authorized_keys"
-          owner: {{ op_username }}
-          group: {{ op_username }}
-          mode: 0400
-          line: {{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}
-          create: true
-          backup: true
-          state: present
-    when: config_primary_op    
+        - name: Update authorized_keys file to include the new public key
+          lineinfile:
+            path: "{{ op_account_homedir }}/.ssh/authorized_keys"
+            owner: {{ op_username }}
+            group: {{ op_username }}
+            mode: 0400
+            line: {{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}
+            create: true
+            backup: true
+            state: present
+      when: config_primary_op    
 
-  - name: Craete sudoers entry for the Ansible Operator
-    template:
-      src: files/sudoer-ansibleop.j2
-      dest: /etc/sudoers.d/{{ op_username }}
-      owner: root
-      group: root
-      umask: 0440
+    - name: Craete sudoers entry for the Ansible Operator
+      template:
+        src: files/sudoer-ansibleop.j2
+        dest: /etc/sudoers.d/{{ op_username }}
+        owner: root
+        group: root
+        umask: 0440
 
-  - name: Add the Ansible Operators public SSH key to the Ansible Operators authorized_keys file
-  - name: Update authorized_keys file to include the primary operator account public key
-    lineinfile:
-      path: "{{ op_account_homedir }}/.ssh/authorized_keys"
-      owner: {{ op_username }}
-      group: {{ op_username }}
-      mode: 0400
-      line: {{ lookup('file', 'files/id_rsa.pub') }}
-      create: true
-      backup: true
-      state: present
-  
-  - name: Debug
-    msg: Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}
+    - name: Add the Ansible Operators public SSH key to the Ansible Operators authorized_keys file
+    - name: Update authorized_keys file to include the primary operator account public key
+      lineinfile:
+        path: "{{ op_account_homedir }}/.ssh/authorized_keys"
+        owner: {{ op_username }}
+        group: {{ op_username }}
+        mode: 0400
+        line: {{ lookup('file', 'files/id_rsa.pub') }}
+        create: true
+        backup: true
+        state: present
+    
+    - name: Debug
+      msg: Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}
     
 ...
