@@ -1,6 +1,7 @@
 ---
 - name: Initialize the ansibleop account on a system
   hosts: "{{ INVENTORY }}"
+  become: true
   vars_files:
     - secrets.yml
 
