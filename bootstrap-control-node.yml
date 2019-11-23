@@ -79,7 +79,7 @@
 
     - name: Create sudoers entry for the Ansible Operator
       template:
-        src: templates/sudoer-ansibleop.j2
+        src: templates/sudoers.d-ansibleop.j2
         dest: /etc/sudoers.d/{{ op_username }}
         owner: root
         group: root
