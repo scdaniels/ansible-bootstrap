@@ -85,7 +85,6 @@
         group: root
         umask: 0440
 
-    - name: Add the Ansible Operators public SSH key to the Ansible Operators authorized_keys file
     - name: Update authorized_keys file to include the primary operator account public key
       lineinfile:
         path: "{{ op_account_homedir }}/.ssh/authorized_keys"
