@@ -68,8 +68,8 @@
         - name: Update authorized_keys file to include the new public key
           lineinfile:
             path: "{{ op_account_homedir }}/.ssh/authorized_keys"
-            owner: {{ op_username }}
-            group: {{ op_username }}
+            owner: "{{ op_username }}"
+            group: "{{ op_username }}"
             mode: 0400
             line: "{{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}"
             create: true
@@ -89,8 +89,8 @@
     - name: Update authorized_keys file to include the primary operator account public key
       lineinfile:
         path: "{{ op_account_homedir }}/.ssh/authorized_keys"
-        owner: {{ op_username }}
-        group: {{ op_username }}
+        owner: "{{ op_username }}"
+        group: "{{ op_username }}"
         mode: 0400
         line: "{{ lookup('file', 'files/id_rsa.pub') }}"
         create: true
