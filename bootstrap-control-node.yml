@@ -96,8 +96,4 @@
         backup: true
         state: present
     
-    - name: Debug
-      debug:
-        msg: "Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}"
-    
 ...
