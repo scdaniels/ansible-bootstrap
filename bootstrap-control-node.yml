@@ -77,9 +77,9 @@
             state: present
       when: config_primary_op    
 
-    - name: Craete sudoers entry for the Ansible Operator
+    - name: Create sudoers entry for the Ansible Operator
       template:
-        src: files/sudoer-ansibleop.j2
+        src: templates/sudoer-ansibleop.j2
         dest: /etc/sudoers.d/{{ op_username }}
         owner: root
         group: root
