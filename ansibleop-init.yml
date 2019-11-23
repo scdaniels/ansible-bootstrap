@@ -98,6 +98,6 @@
         state: present
     
     - name: Debug
-      msg: Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}
+      msg: "Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}"
     
 ...
