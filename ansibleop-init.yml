@@ -71,7 +71,7 @@
             owner: {{ op_username }}
             group: {{ op_username }}
             mode: 0400
-            line: {{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}
+            line: "{{ lookup('file', op_account_homedir + '.ssh/id_rsa.pub') }}"
             create: true
             backup: true
             state: present
@@ -92,7 +92,7 @@
         owner: {{ op_username }}
         group: {{ op_username }}
         mode: 0400
-        line: {{ lookup('file', 'files/id_rsa.pub') }}
+        line: "{{ lookup('file', 'files/id_rsa.pub') }}"
         create: true
         backup: true
         state: present
