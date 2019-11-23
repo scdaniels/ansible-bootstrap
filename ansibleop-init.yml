@@ -1,7 +1,8 @@
 ---
 - name: Initialize the ansibleop account on a system
   hosts: "{{ INVENTORY }}"
-  become: true
+  # remote_user: root|ansible|ansibleop|whatever you need here
+  # become: true|false
   vars_files:
     - secrets.yml
 
@@ -10,6 +11,7 @@
     default_op_password: "{{ secret_default_op_password }}"
     default_op_uid: 1000
     default_op_gid: 1000
+    gen_ssh_key: false
 
   vars_prompt:
     - name: op_account
@@ -32,6 +34,37 @@
       default: "{{ default_op_gid }}"
 
 tasks:
+  - name: create the Ansible operator account
+    user:
+      name: "{{ op_account }}"
+      create_home: true
+      uid: "{{ op_uid }}"
+      state: present
+
+  - name: Create the Ansbile operator account ssh keys
+    user:
+      name: "{{ op_account }}"
+      generate_ssh_key: true
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+      state: present
+    when: gen_ssh_key
+
+  - name: Craete sudoers entry for the Ansible Operator
+    template:
+      src: files/sudoer-ansibleop.j2
+      dest: /etc/sudoers.d/{{ default_op_username }}
+      owner: root
+      group: root
+      umask: 0440
+
+  - name: Add the Ansible Operators public SSH key to the Ansible Operators authorized_keys file
+    lineinfile:
+
+
+
+
+  
   - name: Debug
     msg: Testing the prompt values: user={{ op_account }}, passwd={{ op_password }}, uid={{ op_uid }}, gid={{ op_gid }}
     
